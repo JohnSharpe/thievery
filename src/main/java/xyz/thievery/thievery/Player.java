@@ -2,6 +2,8 @@ package xyz.thievery.thievery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 /**
  * A single player of thievery.
  * Neither identifier nor name can be null, empty or blank.
@@ -15,7 +17,7 @@ public class Player {
 
     public Player(String identifier, String name) {
         if (StringUtils.isAnyBlank(identifier, name)) {
-            throw new IllegalArgumentException("Neither identifier nor name may be blank");
+            throw new IllegalArgumentException("Neither identifier nor name may be blank.");
         }
 
         this.identifier = identifier;
@@ -28,6 +30,20 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return identifier.equals(player.identifier) &&
+                name.equals(player.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), identifier, name);
     }
 
 }
