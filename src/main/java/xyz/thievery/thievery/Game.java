@@ -1,5 +1,8 @@
 package xyz.thievery.thievery;
 
+import xyz.thievery.thievery.exceptions.IllegalActionException;
+import xyz.thievery.thievery.exceptions.IllegalActionReason;
+
 public class Game {
 
     private final Player host;
@@ -28,4 +31,45 @@ public class Game {
     public Turn getTurn() {
         return turn;
     }
+
+    public void performAction(final Action action) throws IllegalActionException {
+//        if (Turn.END == this.turn) {
+//            throw new IllegalActionException("An action cannot be performmed on an ended game.");
+//        }
+
+        if (Turn.HOST == this.turn && !action.getPlayerIdentifier().equals(this.host.getIdentifier())) {
+            throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the host's turn.");
+        }
+        if (Turn.OPPONENT == this.turn && !action.getPlayerIdentifier().equals(this.opponent.getIdentifier())) {
+            throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the opponent's turn.");
+        }
+
+
+        // TODO Same as above for opponent
+
+        switch (action.getActionType()) {
+            case END_TURN:
+                this.endTurn();
+                break;
+//            case MOVE_THIEF:
+//                break;
+//            case MOVE_GUARD:
+//                break;
+//            case REVEAL:
+//                break;
+//
+//            default:
+//                throw new IllegalActionException(
+//                        IllegalActionReason.UNRECOGNISED_ACTION_TYPE, "Unrecognised action type.");
+        }
+    }
+
+    private void endTurn() {
+        if (Turn.HOST == this.turn) {
+            this.turn = Turn.OPPONENT;
+        } else if (Turn.OPPONENT == this.turn) {
+            this.turn = Turn.HOST;
+        }
+    }
+
 }

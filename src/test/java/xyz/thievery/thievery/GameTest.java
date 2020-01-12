@@ -28,7 +28,7 @@ class GameTest {
     }
 
     @Test
-    void testHostGoesFirst() {
+    void testHostGoesFirstInNewGame() {
         final Player host = new Player("ABC", "John");
         final Player opponent = new Player("DEF", "Paul");
         final Game game = new Game(host, opponent);
