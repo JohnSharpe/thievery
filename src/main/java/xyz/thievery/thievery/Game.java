@@ -10,7 +10,11 @@ public class Game {
 
     private Turn turn;
 
-    public Game(Player host, Player opponent) {
+    public Game(final Player host, final Player opponent) {
+        if (host == null || opponent == null) {
+            throw new IllegalArgumentException("Neither host nor opponent may be null.");
+        }
+
         if (host.getIdentifier().equals(opponent.getIdentifier())) {
             throw new IllegalArgumentException("Host and opponent may not have the same identifier.");
         }
@@ -43,9 +47,6 @@ public class Game {
         if (Turn.OPPONENT == this.turn && !action.getPlayerIdentifier().equals(this.opponent.getIdentifier())) {
             throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the opponent's turn.");
         }
-
-
-        // TODO Same as above for opponent
 
         switch (action.getActionType()) {
             case END_TURN:

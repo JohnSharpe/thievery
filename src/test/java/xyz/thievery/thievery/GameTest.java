@@ -19,6 +19,12 @@ class GameTest {
         Assertions.assertEquals(opponent, game.getOpponent());
     }
 
+    @ParameterizedTest
+    @MethodSource("invalidPlayersProvider")
+    void testNullPlayersAreNotAllowed(final Player host, final Player opponent) {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(host, opponent));
+    }
+
     @Test
     void testSamePlayerByIdentifierCannotBeHostAndOpponent() {
         final Player host = new Player("123", "John");
@@ -49,6 +55,23 @@ class GameTest {
                 Arguments.of(
                         new Player("MNO", "Peter"),
                         new Player("PQR", "Peter")
+                )
+        );
+    }
+
+    private static Stream<Arguments> invalidPlayersProvider() {
+        return Stream.of(
+                Arguments.of(
+                        PlayerProvider.HOST,
+                        null
+                ),
+                Arguments.of(
+                        null,
+                        PlayerProvider.OPPONENT
+                ),
+                Arguments.of(
+                        null,
+                        null
                 )
         );
     }

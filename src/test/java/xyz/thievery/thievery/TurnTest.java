@@ -23,7 +23,6 @@ class TurnTest {
     @Test
     void testHostCannotPerformActionWhenItIsNotTheirTurn() throws IllegalActionException {
         final Game game = new Game(PlayerProvider.HOST, PlayerProvider.OPPONENT);
-
         // Make it opponent's turn
         game.performAction(new Action(PlayerProvider.HOST.getIdentifier(), ActionType.END_TURN));
 
