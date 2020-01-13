@@ -19,7 +19,6 @@ class TurnTest {
         }
     }
 
-
     @Test
     void testHostCannotPerformActionWhenItIsNotTheirTurn() throws IllegalActionException {
         final Game game = new Game();
@@ -28,6 +27,21 @@ class TurnTest {
 
         try {
             game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+            Assertions.fail();
+        } catch (IllegalActionException e) {
+            Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());
+        }
+    }
+
+    @Test
+    void testATurnIsAutomaticallyEndedAfterThreeValidActions() throws IllegalActionException {
+        final Game game = new Game();
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+
+        try {
+            game.performAction(new Action(Player.HOST, ActionType.END_TURN));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());

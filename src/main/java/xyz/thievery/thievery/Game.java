@@ -5,12 +5,14 @@ import xyz.thievery.thievery.exceptions.IllegalActionReason;
 
 public class Game {
 
+    private static final int ACTIONS_PER_TURN = 3;
+
     private Status status;
-    // private int remainingActions;
+    private int remainingActions;
 
     public Game() {
         this.status = Status.HOST_TURN;
-        // this.remainingActions = ACTIONS_PER_TURN;
+        this.remainingActions = ACTIONS_PER_TURN;
     }
 
     public Status getStatus() {
@@ -29,21 +31,27 @@ public class Game {
             throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the opponent's turn.");
         }
 
+        // if your guard cannot reveal but you've asked for a reveal, throw
+
         switch (action.getActionType()) {
             case END_TURN:
                 this.endTurn();
+                return;
+            case MOVE_THIEF:
+            case MOVE_GUARD:
+            case REVEAL:
+                this.remainingActions--;
                 break;
-//            case MOVE_THIEF:
-//                break;
-//            case MOVE_GUARD:
-//                break;
-//            case REVEAL:
-//                break;
-//
+
 //            default:
 //                throw new IllegalActionException(
 //                        IllegalActionReason.UNRECOGNISED_ACTION_TYPE, "Unrecognised action type.");
         }
+
+        if (this.remainingActions == 0) {
+            this.endTurn();
+        }
+
     }
 
     private void endTurn() {
@@ -53,7 +61,7 @@ public class Game {
             this.status = Status.HOST_TURN;
         }
 
-        // this.remainingActions = ACTIONS_PER_TURN;
+        this.remainingActions = ACTIONS_PER_TURN;
     }
 
 }
