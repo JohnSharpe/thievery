@@ -5,46 +5,27 @@ import xyz.thievery.thievery.exceptions.IllegalActionReason;
 
 public class Game {
 
-    private final Player host;
-    private final Player opponent;
+    private Status status;
+    // private int remainingActions;
 
-    private Turn turn;
-
-    public Game(final Player host, final Player opponent) {
-        if (host == null || opponent == null) {
-            throw new IllegalArgumentException("Neither host nor opponent may be null.");
-        }
-
-        if (host.getIdentifier().equals(opponent.getIdentifier())) {
-            throw new IllegalArgumentException("Host and opponent may not have the same identifier.");
-        }
-
-        this.host = host;
-        this.opponent = opponent;
-        this.turn = Turn.HOST;
+    public Game() {
+        this.status = Status.HOST_TURN;
+        // this.remainingActions = ACTIONS_PER_TURN;
     }
 
-    public Player getHost() {
-        return host;
-    }
-
-    public Player getOpponent() {
-        return opponent;
-    }
-
-    public Turn getTurn() {
-        return turn;
+    public Status getStatus() {
+        return status;
     }
 
     public void performAction(final Action action) throws IllegalActionException {
-//        if (Turn.END == this.turn) {
+//        if (Status.END == this.status) {
 //            throw new IllegalActionException("An action cannot be performmed on an ended game.");
 //        }
 
-        if (Turn.HOST == this.turn && !action.getPlayerIdentifier().equals(this.host.getIdentifier())) {
+        if (Status.HOST_TURN == this.status && Player.HOST != action.getPlayer()) {
             throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the host's turn.");
         }
-        if (Turn.OPPONENT == this.turn && !action.getPlayerIdentifier().equals(this.opponent.getIdentifier())) {
+        if (Status.OPPONENT_TURN == this.status && Player.OPPONENT != action.getPlayer()) {
             throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the opponent's turn.");
         }
 
@@ -66,11 +47,13 @@ public class Game {
     }
 
     private void endTurn() {
-        if (Turn.HOST == this.turn) {
-            this.turn = Turn.OPPONENT;
-        } else if (Turn.OPPONENT == this.turn) {
-            this.turn = Turn.HOST;
+        if (Status.HOST_TURN == this.status) {
+            this.status = Status.OPPONENT_TURN;
+        } else if (Status.OPPONENT_TURN == this.status) {
+            this.status = Status.HOST_TURN;
         }
+
+        // this.remainingActions = ACTIONS_PER_TURN;
     }
 
 }

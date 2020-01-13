@@ -9,10 +9,10 @@ class TurnTest {
 
     @Test
     void testOpponentCannotPerformActionWhenItIsNotTheirTurn() {
-        final Game game = new Game(PlayerProvider.HOST, PlayerProvider.OPPONENT);
+        final Game game = new Game();
 
         try {
-            game.performAction(new Action(PlayerProvider.OPPONENT.getIdentifier(), ActionType.MOVE_GUARD));
+            game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());
@@ -22,12 +22,12 @@ class TurnTest {
 
     @Test
     void testHostCannotPerformActionWhenItIsNotTheirTurn() throws IllegalActionException {
-        final Game game = new Game(PlayerProvider.HOST, PlayerProvider.OPPONENT);
+        final Game game = new Game();
         // Make it opponent's turn
-        game.performAction(new Action(PlayerProvider.HOST.getIdentifier(), ActionType.END_TURN));
+        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(PlayerProvider.HOST.getIdentifier(), ActionType.MOVE_GUARD));
+            game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());

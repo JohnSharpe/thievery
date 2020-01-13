@@ -7,19 +7,19 @@ package xyz.thievery.thievery;
  */
 public class Action {
 
-    private final String playerIdentifier;
+    private final Player player;
     private final ActionType actionType;
 
     public Action(
-            final String playerIdentifier,
+            final Player player,
             final ActionType actionType
     ) {
-        this.playerIdentifier = playerIdentifier;
+        this.player = player;
         this.actionType = actionType;
     }
 
-    public String getPlayerIdentifier() {
-        return playerIdentifier;
+    public Player getPlayer() {
+        return player;
     }
 
     public ActionType getActionType() {
