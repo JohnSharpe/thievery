@@ -4,7 +4,35 @@ import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
 import xyz.thievery.thievery.units.Guard;
 
+/**
+ * A single game of Thievery.
+ *
+ * The map looks like this
+ *                ________________________
+ * 6 (Opp Home)  |                        |
+ *               |________________________|
+ * 5             |    |    |    |    |    |
+ *               |____|____|____|____|____|
+ * 4             |    |    |    |    |    |
+ *               |____|____|____|____|____|
+ * 3             |    |    |    |    |    |
+ *               |____|____|____|____|____|
+ * 2             |    |    |    |    |    |
+ *               |____|____|____|____|____|
+ * 1             |    |    |    |    |    |
+ *               | ___|____|____|____|____|
+ * 0 (Host Home) |                        |
+ *               |________________________|
+ *
+ *                 0    1    2    3    4
+ */
 public class Game {
+
+    public static final int LEFTMOST_COLUMN = 0;
+    public static final int RIGHTMOST_COLUMN = 4;
+
+    public static final int HOST_HOME_ROW = 0;
+    public static final int OPPONENT_HOME_ROW = 6;
 
     private static final int ACTIONS_PER_TURN = 3;
 
@@ -82,14 +110,14 @@ public class Game {
 
     private void moveGuardValidate(final Action action, final Guard myGuard) throws IllegalActionException {
         // TODO This looks like it'd be relevant to thieves too
-        if (action.getX() < 0 || action.getX() > 4 || action.getY() < 0 || action.getY() > 6) {
+        if (action.getX() < LEFTMOST_COLUMN || action.getX() > RIGHTMOST_COLUMN || action.getY() < HOST_HOME_ROW || action.getY() > OPPONENT_HOME_ROW) {
             throw new IllegalActionException(IllegalActionReason.NO_SUCH_POSITION, "No unit can move off-map");
         }
 
         // TODO This looks like it'd be relevant to thieves too
         // TODO Consider making 0 and 6 (and other magic numbers) fields
         final int xDifference;
-        if (myGuard.getY() == 0 || myGuard.getY() == 6) {
+        if (myGuard.getY() == HOST_HOME_ROW || myGuard.getY() == OPPONENT_HOME_ROW) {
             // The guard is currently home, x can be anything on-map
             xDifference = 0;
         } else {
@@ -111,7 +139,7 @@ public class Game {
             throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A nil move is not possible.");
         }
 
-        if (action.getY() == 0 || action.getY() == 6) {
+        if (action.getY() == HOST_HOME_ROW || action.getY() == OPPONENT_HOME_ROW) {
             throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A guard can not enter a home.");
         }
 
