@@ -48,7 +48,6 @@ public class Game {
                 final Guard myGuard = action.getPlayer() == Player.HOST ? this.hostGuard : this.opponentGuard;
                 this.moveGuardValidate(action);
                 myGuard.move(action.getX(), action.getY());
-                this.remainingActions--;
                 break;
 //            case MOVE_THIEF:
 //            case REVEAL:
@@ -59,6 +58,8 @@ public class Game {
 //                throw new IllegalActionException(
 //                        IllegalActionReason.UNRECOGNISED_ACTION_TYPE, "Unrecognised action type.");
         }
+
+        this.remainingActions--;
 
         if (this.remainingActions == 0) {
             this.endTurn();

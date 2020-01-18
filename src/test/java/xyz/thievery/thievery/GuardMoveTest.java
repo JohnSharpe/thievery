@@ -100,6 +100,29 @@ class GuardMoveTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4})
+    void testHostGuardCanMoveFromHomeToAnyColumn(final int destinationX) throws IllegalActionException {
+        final Game game = new Game();
+
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, destinationX, 1));
+
+        Assertions.assertEquals(destinationX, game.getHostGuard().getX());
+        Assertions.assertEquals(1, game.getHostGuard().getY());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4})
+    void testOpponentGuardCanMoveFromHomeToAnyColumn(final int destinationX) throws IllegalActionException {
+        final Game game = new Game();
+
+        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
+        game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD, destinationX, 1));
+
+        Assertions.assertEquals(destinationX, game.getOpponentGuard().getX());
+        Assertions.assertEquals(1, game.getOpponentGuard().getY());
+    }
+
 //    @Test
 //    void testGuardCanMoveToAdjacentPoint() {
 //
