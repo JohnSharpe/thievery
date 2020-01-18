@@ -12,7 +12,7 @@ class TurnTest {
         final Game game = new Game();
 
         try {
-            game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD));
+            game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD, 2, 1));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());
@@ -26,7 +26,7 @@ class TurnTest {
         game.performAction(new Action(Player.HOST, ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+            game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 1, 1));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());
@@ -36,9 +36,9 @@ class TurnTest {
     @Test
     void testATurnIsAutomaticallyEndedAfterThreeValidActions() throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
-        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
-        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 1));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 2));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 3));
 
         try {
             game.performAction(new Action(Player.HOST, ActionType.END_TURN));

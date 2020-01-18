@@ -24,7 +24,7 @@ class EndTurnTest {
     @Test
     void testAPlayerMayEndTheirTurnAfterOneAction() throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 1));
         game.performAction(new Action(Player.HOST, ActionType.END_TURN));
         Assertions.assertEquals(Status.OPPONENT_TURN, game.getStatus());
     }
@@ -32,8 +32,8 @@ class EndTurnTest {
     @Test
     void testAPlayerMayEndTheirTurnAfterTwoActions() throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
-        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 1));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 2));
         game.performAction(new Action(Player.HOST, ActionType.END_TURN));
         Assertions.assertEquals(Status.OPPONENT_TURN, game.getStatus());
     }
