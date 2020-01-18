@@ -19,4 +19,6 @@ class UnitTest {
         Assertions.assertEquals(6, game.getOpponentGuard().getY());
     }
 
+    // TODO Thieves will probably need this too
+
 }

@@ -46,7 +46,7 @@ public class Game {
                 return;
             case MOVE_GUARD:
                 final Guard myGuard = action.getPlayer() == Player.HOST ? this.hostGuard : this.opponentGuard;
-                this.moveGuardValidate(action);
+                this.moveGuardValidate(action, myGuard);
                 myGuard.move(action.getX(), action.getY());
                 break;
 //            case MOVE_THIEF:
@@ -80,10 +80,41 @@ public class Game {
         }
     }
 
-    private void moveGuardValidate(final Action action) throws IllegalActionException {
-        if (action.getY() == 0 || action.getY() == 6) {
-            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "A guard can not enter a home.");
+    private void moveGuardValidate(final Action action, final Guard myGuard) throws IllegalActionException {
+        // TODO This looks like it'd be relevant to thieves too
+        if (action.getX() < 0 || action.getX() > 4 || action.getY() < 0 || action.getY() > 6) {
+            throw new IllegalActionException(IllegalActionReason.NO_SUCH_POSITION, "No unit can move off-map");
         }
+
+        // TODO This looks like it'd be relevant to thieves too
+        // TODO Consider making 0 and 6 (and other magic numbers) fields
+        final int xDifference;
+        if (myGuard.getY() == 0 || myGuard.getY() == 6) {
+            // The guard is currently home, x can be anything on-map
+            xDifference = 0;
+        } else {
+            xDifference = myGuard.getX() - action.getX();
+        }
+
+        if (xDifference < -1 || xDifference > 1) {
+            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
+        }
+
+        final int yDifference = myGuard.getY() - action.getY();
+        if (yDifference < -1 || yDifference > 1) {
+            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
+        }
+        if (xDifference != 0 && yDifference != 0) {
+            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
+        }
+        if (xDifference == 0 && yDifference == 0) {
+            throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A nil move is not possible.");
+        }
+
+        if (action.getY() == 0 || action.getY() == 6) {
+            throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A guard can not enter a home.");
+        }
+
     }
 
     private void endTurn() {
