@@ -73,8 +73,16 @@ public class Game {
                 this.endTurn();
                 return;
             case MOVE_GUARD:
-                final Guard myGuard = action.getPlayer() == Player.HOST ? this.hostGuard : this.opponentGuard;
-                this.moveGuardValidate(action, myGuard);
+                final Guard myGuard;
+                final Guard theirGuard;
+                if (action.getPlayer() == Player.HOST) {
+                    myGuard = this.hostGuard;
+                    theirGuard = this.opponentGuard;
+                } else {
+                    myGuard = this.opponentGuard;
+                    theirGuard = this.hostGuard;
+                }
+                this.moveGuardValidate(action, myGuard, theirGuard);
                 myGuard.move(action.getX(), action.getY());
                 break;
 //            case MOVE_THIEF:
@@ -108,7 +116,7 @@ public class Game {
         }
     }
 
-    private void moveGuardValidate(final Action action, final Guard myGuard) throws IllegalActionException {
+    private void moveGuardValidate(final Action action, final Guard myGuard, final Guard theirGuard) throws IllegalActionException {
         // TODO This looks like it'd be relevant to thieves too
         if (action.getX() < LEFTMOST_COLUMN || action.getX() > RIGHTMOST_COLUMN || action.getY() < HOST_HOME_ROW || action.getY() > OPPONENT_HOME_ROW) {
             throw new IllegalActionException(IllegalActionReason.NO_SUCH_POSITION, "No unit can move off-map");
@@ -139,8 +147,13 @@ public class Game {
             throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A nil move is not possible.");
         }
 
+        // These movement rules are relevant to guards only
         if (action.getY() == HOST_HOME_ROW || action.getY() == OPPONENT_HOME_ROW) {
             throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A guard can not enter a home.");
+        }
+
+        if (action.getX() == theirGuard.getX() && action.getY() == theirGuard.getY()) {
+            throw new IllegalActionException(IllegalActionReason.BLOCKED, "Your guard may occupy the same space as your opponent's guard.");
         }
 
     }

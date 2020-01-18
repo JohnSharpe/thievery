@@ -288,8 +288,25 @@ class GuardMoveTest {
         }
     }
 
-    // TODO Later
-    // Guard can not move into space occupied by opponent guard etc
+    @Test
+    void testGuardCanNotMoveOntoOtherGuard() throws IllegalActionException {
+        final Game game = new Game();
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 1));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 2));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 3));
+
+        game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD, 2, 5));
+        game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD, 2, 4));
+
+        try {
+            game.performAction(new Action(Player.OPPONENT, ActionType.MOVE_GUARD, 2, 3));
+            Assertions.fail();
+        } catch (IllegalActionException e) {
+            Assertions.assertEquals(IllegalActionReason.BLOCKED, e.getReason());
+        }
+    }
+
+    // TODO Later Guard cannot move onto your thief
 
     private static Stream<Arguments> offMapCoordinatesProvider() {
         return Stream.of(
