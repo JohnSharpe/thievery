@@ -12,7 +12,6 @@ import xyz.thievery.thievery.Game;
 import xyz.thievery.thievery.Player;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
-import xyz.thievery.thievery.units.Unit;
 
 import java.util.stream.Stream;
 

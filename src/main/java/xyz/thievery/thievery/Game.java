@@ -4,7 +4,6 @@ import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
 import xyz.thievery.thievery.units.Guard;
 import xyz.thievery.thievery.units.Thief;
-import xyz.thievery.thievery.units.Unit;
 
 /**
  * A single game of Thievery.
@@ -106,8 +105,8 @@ public class Game {
                     theirGuard = this.hostGuard;
                 }
 
-                this.moveGuardValidate(action, myGuard, myThief, theirGuard);
-                myGuard.move(action.getX(), action.getY());
+                myGuard.validateMove(action.getX(), action.getY(), myThief, theirGuard);
+                myGuard.executeMove(action.getX(), action.getY());
                 break;
             }
             case MOVE_THIEF: {
@@ -122,8 +121,8 @@ public class Game {
                     myGuard = this.opponentGuard;
                 }
 
-                this.moveThiefValidate(action, myThief, myGuard);
-                myThief.move(action.getX(), action.getY());
+                myThief.validateMove(action.getX(), action.getY(), myGuard);
+                myThief.executeMove(action.getX(), action.getY());
                 break;
             }
 //            case REVEAL:
@@ -153,60 +152,6 @@ public class Game {
         }
         if (Status.OPPONENT_TURN == this.status && Player.OPPONENT != action.getPlayer()) {
             throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the opponent's turn.");
-        }
-    }
-
-    private void moveUnitValidate(final Action action, final Unit myUnit) throws IllegalActionException {
-        if (action.getX() < LEFTMOST_COLUMN || action.getX() > RIGHTMOST_COLUMN || action.getY() < HOST_HOME_ROW || action.getY() > OPPONENT_HOME_ROW) {
-            throw new IllegalActionException(IllegalActionReason.NO_SUCH_POSITION, "No unit can move off-map");
-        }
-
-        final int xDifference;
-        if (myUnit.getY() == HOST_HOME_ROW || myUnit.getY() == OPPONENT_HOME_ROW) {
-            // The unit is currently home, x can be anything on-map
-            xDifference = 0;
-        } else {
-            xDifference = myUnit.getX() - action.getX();
-        }
-
-        if (xDifference < -1 || xDifference > 1) {
-            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
-        }
-
-        final int yDifference = myUnit.getY() - action.getY();
-        if (yDifference < -1 || yDifference > 1) {
-            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
-        }
-        if (xDifference != 0 && yDifference != 0) {
-            throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
-        }
-        if (xDifference == 0 && yDifference == 0) {
-            throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A nil move is not possible.");
-        }
-    }
-
-    private void moveGuardValidate(final Action action, final Guard myGuard, final Thief myThief, final Guard theirGuard) throws IllegalActionException {
-        this.moveUnitValidate(action, myGuard);
-
-        // These movement rules are relevant to guards only
-        if (action.getY() == HOST_HOME_ROW || action.getY() == OPPONENT_HOME_ROW) {
-            throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A guard can not enter a home.");
-        }
-
-        if (action.getX() == myThief.getX() && action.getY() == myThief.getY()) {
-            throw new IllegalActionException(IllegalActionReason.BLOCKED, "A guard can not land on his own thief.");
-        }
-
-        if (action.getX() == theirGuard.getX() && action.getY() == theirGuard.getY()) {
-            throw new IllegalActionException(IllegalActionReason.BLOCKED, "Your guard may occupy the same space as your opponent's guard.");
-        }
-    }
-
-    private void moveThiefValidate(final Action action, final Thief myThief, final Guard myGuard) throws IllegalActionException {
-        this.moveUnitValidate(action, myThief);
-
-        if (action.getX() == myGuard.getX() && action.getY() == myGuard.getY()) {
-            throw new IllegalActionException(IllegalActionReason.BLOCKED, "A thief can not land on his own guard.");
         }
     }
 
