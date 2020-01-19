@@ -36,16 +36,22 @@ class TurnTest {
     @Test
     void testATurnIsAutomaticallyEndedAfterThreeValidActions() throws IllegalActionException {
         final Game game = new Game();
+
+        Assertions.assertEquals(Status.HOST_TURN, game.getStatus());
+        Assertions.assertEquals(3, game.getRemainingActions());
         game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 1));
+
+        Assertions.assertEquals(Status.HOST_TURN, game.getStatus());
+        Assertions.assertEquals(2, game.getRemainingActions());
         game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 2));
+
+        Assertions.assertEquals(Status.HOST_TURN, game.getStatus());
+        Assertions.assertEquals(1, game.getRemainingActions());
         game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 3));
 
-        try {
-            game.performAction(new Action(Player.HOST, ActionType.END_TURN));
-            Assertions.fail();
-        } catch (IllegalActionException e) {
-            Assertions.assertEquals(IllegalActionReason.NOT_YOUR_TURN, e.getReason());
-        }
+        Assertions.assertEquals(Status.OPPONENT_TURN, game.getStatus());
+        Assertions.assertEquals(3, game.getRemainingActions());
+
     }
 
 //    @Test

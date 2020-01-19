@@ -11,4 +11,14 @@ class GameTest {
         Assertions.assertEquals(Status.HOST_TURN, game.getStatus());
     }
 
+    @Test
+    void testUnitCreation() {
+        final Game game = new Game();
+
+        Assertions.assertNotNull(game.getHostGuard());
+        Assertions.assertNotNull(game.getHostThief());
+        Assertions.assertNotNull(game.getOpponentGuard());
+        Assertions.assertNotNull(game.getOpponentThief());
+    }
+
 }

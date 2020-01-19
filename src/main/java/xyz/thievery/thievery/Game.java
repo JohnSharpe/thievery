@@ -3,6 +3,8 @@ package xyz.thievery.thievery;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
 import xyz.thievery.thievery.units.Guard;
+import xyz.thievery.thievery.units.Thief;
+import xyz.thievery.thievery.units.Unit;
 
 /**
  * A single game of Thievery.
@@ -36,31 +38,47 @@ public class Game {
 
     private static final int ACTIONS_PER_TURN = 3;
 
+    private final Guard hostGuard;
+    private final Thief hostThief;
+
+    private final Guard opponentGuard;
+    private final Thief opponentThief;
+
     private Status status;
     private int remainingActions;
 
-    private Guard hostGuard;
-
-    private Guard opponentGuard;
-
     public Game() {
+        this.hostGuard = new Guard(Player.HOST);
+        this.hostThief = new Thief(Player.HOST);
+        this.opponentGuard = new Guard(Player.OPPONENT);
+        this.opponentThief = new Thief(Player.OPPONENT);
+
         this.status = Status.HOST_TURN;
         this.remainingActions = ACTIONS_PER_TURN;
-
-        this.hostGuard = new Guard(Player.HOST);
-        this.opponentGuard = new Guard(Player.OPPONENT);
     }
 
     public Status getStatus() {
         return status;
     }
 
+    public int getRemainingActions() {
+        return remainingActions;
+    }
+
     public Guard getHostGuard() {
         return hostGuard;
     }
 
+    public Thief getHostThief() {
+        return hostThief;
+    }
+
     public Guard getOpponentGuard() {
         return opponentGuard;
+    }
+
+    public Thief getOpponentThief() {
+        return opponentThief;
     }
 
     public void performAction(final Action action) throws IllegalActionException {
@@ -69,10 +87,11 @@ public class Game {
 
         // Per-action validation should occur here before making any changes
         switch (action.getActionType()) {
-            case END_TURN:
+            case END_TURN: {
                 this.endTurn();
                 return;
-            case MOVE_GUARD:
+            }
+            case MOVE_GUARD: {
                 final Guard myGuard;
                 final Guard theirGuard;
                 if (action.getPlayer() == Player.HOST) {
@@ -85,7 +104,19 @@ public class Game {
                 this.moveGuardValidate(action, myGuard, theirGuard);
                 myGuard.move(action.getX(), action.getY());
                 break;
-//            case MOVE_THIEF:
+            }
+            case MOVE_THIEF: {
+                final Thief myThief;
+
+                if (action.getPlayer() == Player.HOST) {
+                    myThief = this.hostThief;
+                } else {
+                    myThief = this.opponentThief;
+                }
+                this.moveThiefValidate(action, myThief);
+                myThief.move(action.getX(), action.getY());
+                break;
+            }
 //            case REVEAL:
 //                this.remainingActions--;
 //                break;
@@ -116,27 +147,24 @@ public class Game {
         }
     }
 
-    private void moveGuardValidate(final Action action, final Guard myGuard, final Guard theirGuard) throws IllegalActionException {
-        // TODO This looks like it'd be relevant to thieves too
+    private void moveUnitValidate(final Action action, final Unit myUnit) throws IllegalActionException {
         if (action.getX() < LEFTMOST_COLUMN || action.getX() > RIGHTMOST_COLUMN || action.getY() < HOST_HOME_ROW || action.getY() > OPPONENT_HOME_ROW) {
             throw new IllegalActionException(IllegalActionReason.NO_SUCH_POSITION, "No unit can move off-map");
         }
 
-        // TODO This looks like it'd be relevant to thieves too
-        // TODO Consider making 0 and 6 (and other magic numbers) fields
         final int xDifference;
-        if (myGuard.getY() == HOST_HOME_ROW || myGuard.getY() == OPPONENT_HOME_ROW) {
-            // The guard is currently home, x can be anything on-map
+        if (myUnit.getY() == HOST_HOME_ROW || myUnit.getY() == OPPONENT_HOME_ROW) {
+            // The unit is currently home, x can be anything on-map
             xDifference = 0;
         } else {
-            xDifference = myGuard.getX() - action.getX();
+            xDifference = myUnit.getX() - action.getX();
         }
 
         if (xDifference < -1 || xDifference > 1) {
             throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
         }
 
-        final int yDifference = myGuard.getY() - action.getY();
+        final int yDifference = myUnit.getY() - action.getY();
         if (yDifference < -1 || yDifference > 1) {
             throw new IllegalActionException(IllegalActionReason.NOT_WITHIN_REACH, "No unit can move by more than 1 space.");
         }
@@ -146,6 +174,10 @@ public class Game {
         if (xDifference == 0 && yDifference == 0) {
             throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A nil move is not possible.");
         }
+    }
+
+    private void moveGuardValidate(final Action action, final Guard myGuard, final Guard theirGuard) throws IllegalActionException {
+        this.moveUnitValidate(action, myGuard);
 
         // These movement rules are relevant to guards only
         if (action.getY() == HOST_HOME_ROW || action.getY() == OPPONENT_HOME_ROW) {
@@ -155,7 +187,10 @@ public class Game {
         if (action.getX() == theirGuard.getX() && action.getY() == theirGuard.getY()) {
             throw new IllegalActionException(IllegalActionReason.BLOCKED, "Your guard may occupy the same space as your opponent's guard.");
         }
+    }
 
+    private void moveThiefValidate(final Action action, final Thief myThief) throws IllegalActionException {
+        this.moveUnitValidate(action, myThief);
     }
 
     private void endTurn() {
