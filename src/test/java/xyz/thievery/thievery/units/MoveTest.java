@@ -1,4 +1,4 @@
-package xyz.thievery.thievery;
+package xyz.thievery.thievery.units;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -6,6 +6,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import xyz.thievery.thievery.Action;
+import xyz.thievery.thievery.ActionType;
+import xyz.thievery.thievery.Game;
+import xyz.thievery.thievery.Player;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
 import xyz.thievery.thievery.units.Unit;

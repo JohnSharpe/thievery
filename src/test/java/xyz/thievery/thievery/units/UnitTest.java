@@ -1,7 +1,8 @@
-package xyz.thievery.thievery;
+package xyz.thievery.thievery.units;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import xyz.thievery.thievery.Game;
 
 class UnitTest {
 
@@ -19,6 +20,18 @@ class UnitTest {
         Assertions.assertEquals(6, game.getOpponentGuard().getY());
     }
 
-    // TODO Thieves will probably need this too
+    @Test
+    void testHostThiefStartsAtHostHome() {
+        final Game game = new Game();
+        Assertions.assertEquals(0, game.getHostThief().getX());
+        Assertions.assertEquals(0, game.getHostThief().getY());
+    }
+
+    @Test
+    void testOpponentThiefStartsAtHostHome() {
+        final Game game = new Game();
+        Assertions.assertEquals(0, game.getOpponentThief().getX());
+        Assertions.assertEquals(6, game.getOpponentThief().getY());
+    }
 
 }

@@ -1,10 +1,13 @@
-package xyz.thievery.thievery;
+package xyz.thievery.thievery.units;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import xyz.thievery.thievery.Action;
+import xyz.thievery.thievery.ActionType;
+import xyz.thievery.thievery.Game;
+import xyz.thievery.thievery.Player;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
-import xyz.thievery.thievery.units.Unit;
 
 class GuardMoveTest extends MoveTest {
 
@@ -42,6 +45,23 @@ class GuardMoveTest extends MoveTest {
     }
 
     @Test
+    void testGuardCanNotMoveOntoYourThief() throws IllegalActionException {
+        final Game game = new Game();
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_THIEF, 2, 1));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_THIEF, 2, 2));
+        game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 1));
+
+        game.performAction(new Action(Player.OPPONENT, ActionType.END_TURN));
+
+        try {
+            game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 2, 2));
+            Assertions.fail();
+        } catch (IllegalActionException e) {
+            Assertions.assertEquals(IllegalActionReason.BLOCKED, e.getReason());
+        }
+    }
+
+    @Test
     void testGuardCanNotEnterHome() throws IllegalActionException {
         final Game game = new Game();
         game.performAction(new Action(Player.HOST, ActionType.MOVE_GUARD, 0, 1));
@@ -53,7 +73,5 @@ class GuardMoveTest extends MoveTest {
             Assertions.assertEquals(IllegalActionReason.ILLEGAL_MOVE, e.getReason());
         }
     }
-
-    // TODO Later, Guard cannot move onto your own thief!
 
 }

@@ -93,27 +93,36 @@ public class Game {
             }
             case MOVE_GUARD: {
                 final Guard myGuard;
+                final Thief myThief;
                 final Guard theirGuard;
+
                 if (action.getPlayer() == Player.HOST) {
                     myGuard = this.hostGuard;
+                    myThief = this.hostThief;
                     theirGuard = this.opponentGuard;
                 } else {
                     myGuard = this.opponentGuard;
+                    myThief = this.opponentThief;
                     theirGuard = this.hostGuard;
                 }
-                this.moveGuardValidate(action, myGuard, theirGuard);
+
+                this.moveGuardValidate(action, myGuard, myThief, theirGuard);
                 myGuard.move(action.getX(), action.getY());
                 break;
             }
             case MOVE_THIEF: {
                 final Thief myThief;
+                final Guard myGuard;
 
                 if (action.getPlayer() == Player.HOST) {
                     myThief = this.hostThief;
+                    myGuard = this.hostGuard;
                 } else {
                     myThief = this.opponentThief;
+                    myGuard = this.opponentGuard;
                 }
-                this.moveThiefValidate(action, myThief);
+
+                this.moveThiefValidate(action, myThief, myGuard);
                 myThief.move(action.getX(), action.getY());
                 break;
             }
@@ -176,7 +185,7 @@ public class Game {
         }
     }
 
-    private void moveGuardValidate(final Action action, final Guard myGuard, final Guard theirGuard) throws IllegalActionException {
+    private void moveGuardValidate(final Action action, final Guard myGuard, final Thief myThief, final Guard theirGuard) throws IllegalActionException {
         this.moveUnitValidate(action, myGuard);
 
         // These movement rules are relevant to guards only
@@ -184,13 +193,21 @@ public class Game {
             throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A guard can not enter a home.");
         }
 
+        if (action.getX() == myThief.getX() && action.getY() == myThief.getY()) {
+            throw new IllegalActionException(IllegalActionReason.BLOCKED, "A guard can not land on his own thief.");
+        }
+
         if (action.getX() == theirGuard.getX() && action.getY() == theirGuard.getY()) {
             throw new IllegalActionException(IllegalActionReason.BLOCKED, "Your guard may occupy the same space as your opponent's guard.");
         }
     }
 
-    private void moveThiefValidate(final Action action, final Thief myThief) throws IllegalActionException {
+    private void moveThiefValidate(final Action action, final Thief myThief, final Guard myGuard) throws IllegalActionException {
         this.moveUnitValidate(action, myThief);
+
+        if (action.getX() == myGuard.getX() && action.getY() == myGuard.getY()) {
+            throw new IllegalActionException(IllegalActionReason.BLOCKED, "A thief can not land on his own guard.");
+        }
     }
 
     private void endTurn() {
