@@ -112,17 +112,23 @@ public class Game {
             case MOVE_THIEF: {
                 final Thief myThief;
                 final Guard myGuard;
+                final int homeRow;
 
                 if (action.getPlayer() == Player.HOST) {
                     myThief = this.hostThief;
                     myGuard = this.hostGuard;
+                    homeRow = HOST_HOME_ROW;
                 } else {
                     myThief = this.opponentThief;
                     myGuard = this.opponentGuard;
+                    homeRow = OPPONENT_HOME_ROW;
                 }
 
                 myThief.validateMove(action.getX(), action.getY(), myGuard);
                 myThief.executeMove(action.getX(), action.getY());
+
+                // TODO if (myThief.isCarrying() && myThief.getY() == homeRow) {}
+
                 break;
             }
 //            case REVEAL:
@@ -132,6 +138,20 @@ public class Game {
 //            default:
 //                throw new IllegalActionException(
 //                        IllegalActionReason.UNRECOGNISED_ACTION_TYPE, "Unrecognised action type.");
+        }
+
+
+        // Check for catches
+        //// Host guard catches Opponent thief
+        if (this.hostGuard.hasCaught(this.opponentThief)) {
+            // TODO this.opponentThief.setCarrying(false);
+            this.opponentThief.executeMove(0, OPPONENT_HOME_ROW);
+        }
+
+        //// Opponent guard catches Host thief
+        if (this.opponentGuard.hasCaught(this.hostThief)) {
+            // TODO this.hostThief.setCarrying(false);
+            this.hostThief.executeMove(0, HOST_HOME_ROW);
         }
 
         this.remainingActions--;

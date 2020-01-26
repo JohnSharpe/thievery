@@ -27,4 +27,13 @@ public class Guard extends Unit {
         }
     }
 
+    public boolean hasCaught(final Thief thief) {
+
+        // Guards are powerless in their home row.
+        if (Game.HOST_HOME_ROW == this.getY() || Game.OPPONENT_HOME_ROW == this.getY()) {
+            return false;
+        }
+
+        return this.getX() == thief.getX() && this.getY() == thief.getY();
+    }
 }
