@@ -90,12 +90,17 @@ public class Game {
         // Are we ever concerned with their thief?
         // final Thief theirThief;
 
+        final int myHome;
+        final int theirHome;
+
         switch (this.status) {
             case HOST_TURN: {
                 myGuard = this.hostGuard;
                 myThief = this.hostThief;
                 theirGuard = this.opponentGuard;
                 // theirThief = this.opponentThief;
+                myHome = HOST_HOME_ROW;
+                theirHome = OPPONENT_HOME_ROW;
                 break;
             }
             case OPPONENT_TURN: {
@@ -103,6 +108,8 @@ public class Game {
                 myThief = this.opponentThief;
                 theirGuard = this.hostGuard;
                 // theirThief = this.hostThief;
+                myHome = OPPONENT_HOME_ROW;
+                theirHome = HOST_HOME_ROW;
                 break;
             }
 //            case END: {
@@ -132,7 +139,11 @@ public class Game {
                 myThief.validateMove(action.getX(), action.getY(), myGuard);
                 myThief.executeMove(action.getX(), action.getY());
 
-                // TODO if (myThief.isCarrying() && myThief.getY() == homeRow) {}
+                if (myThief.getY() == theirHome) {
+                    myThief.setCarrying(true);
+                }
+
+                // TODO if (myThief.isCarrying() && myThief.getY() == myHome) {}
 
                 break;
             }
@@ -145,13 +156,13 @@ public class Game {
         // Check for catches
         //// Host guard catches Opponent thief
         if (this.hostGuard.hasCaught(this.opponentThief)) {
-            // TODO this.opponentThief.setCarrying(false);
+            this.opponentThief.setCarrying(false);
             this.opponentThief.executeMove(0, OPPONENT_HOME_ROW);
         }
 
         //// Opponent guard catches Host thief
         if (this.opponentGuard.hasCaught(this.hostThief)) {
-            // TODO this.hostThief.setCarrying(false);
+            this.hostThief.setCarrying(false);
             this.hostThief.executeMove(0, HOST_HOME_ROW);
         }
 
