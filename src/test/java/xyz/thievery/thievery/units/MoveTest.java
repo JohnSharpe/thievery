@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import xyz.thievery.thievery.Action;
 import xyz.thievery.thievery.ActionType;
 import xyz.thievery.thievery.Game;
-import xyz.thievery.thievery.Player;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
 
@@ -23,7 +22,7 @@ abstract class MoveTest {
         final Game game = new Game();
 
         Assertions.assertDoesNotThrow(() -> game.performAction(
-                new Action(Player.HOST, this.getActionType(), destinationX, 1)
+                new Action(this.getActionType(), destinationX, 1)
         ));
 
         Assertions.assertEquals(destinationX, this.getHostUnit(game).getX());
@@ -34,10 +33,10 @@ abstract class MoveTest {
     @ValueSource(ints = {0, 1, 2, 3, 4})
     void testOpponentUnitCanMoveOutOfHome(final int destinationX) throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
+        game.performAction(new Action(ActionType.END_TURN));
 
         Assertions.assertDoesNotThrow(() -> game.performAction(
-                new Action(Player.OPPONENT, this.getActionType(), destinationX, 5)
+                new Action(this.getActionType(), destinationX, 5)
         ));
 
         Assertions.assertEquals(destinationX, this.getOpponentUnit(game).getX());
@@ -49,7 +48,7 @@ abstract class MoveTest {
     void testHostUnitCanMoveFromHomeToAnyColumn(final int destinationX) throws IllegalActionException {
         final Game game = new Game();
 
-        game.performAction(new Action(Player.HOST, this.getActionType(), destinationX, 1));
+        game.performAction(new Action(this.getActionType(), destinationX, 1));
 
         Assertions.assertEquals(destinationX, this.getHostUnit(game).getX());
         Assertions.assertEquals(1, this.getHostUnit(game).getY());
@@ -60,8 +59,8 @@ abstract class MoveTest {
     void testOpponentUnitCanMoveFromHomeToAnyColumn(final int destinationX) throws IllegalActionException {
         final Game game = new Game();
 
-        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
-        game.performAction(new Action(Player.OPPONENT, this.getActionType(), destinationX, 5));
+        game.performAction(new Action(ActionType.END_TURN));
+        game.performAction(new Action(this.getActionType(), destinationX, 5));
 
         Assertions.assertEquals(destinationX, this.getOpponentUnit(game).getX());
         Assertions.assertEquals(5, this.getOpponentUnit(game).getY());
@@ -73,7 +72,7 @@ abstract class MoveTest {
         final Game game = new Game();
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), destinationX, 0));
+            game.performAction(new Action(this.getActionType(), destinationX, 0));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NO_SUCH_POSITION, e.getReason());
@@ -85,7 +84,7 @@ abstract class MoveTest {
         final Game game = new Game();
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), 0, -1));
+            game.performAction(new Action(this.getActionType(), 0, -1));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NO_SUCH_POSITION, e.getReason());
@@ -96,10 +95,10 @@ abstract class MoveTest {
     @ValueSource(ints = {-1, 5})
     void testOpponentUnitCanNotMoveHorizontallyOffMapFromHome(final int destinationX) throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
+        game.performAction(new Action(ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(Player.OPPONENT, this.getActionType(), destinationX, 0));
+            game.performAction(new Action(this.getActionType(), destinationX, 0));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NO_SUCH_POSITION, e.getReason());
@@ -109,10 +108,10 @@ abstract class MoveTest {
     @Test
     void testOpponentUnitCanNotMoveVerticallyOffMapFromHome() throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
+        game.performAction(new Action(ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(Player.OPPONENT, this.getActionType(), 0, 7));
+            game.performAction(new Action(this.getActionType(), 0, 7));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NO_SUCH_POSITION, e.getReason());
@@ -122,22 +121,22 @@ abstract class MoveTest {
     @Test
     void testUnitCanMoveToAdjacentPoint() throws IllegalActionException {
         final Game game = new Game();
-        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(Player.HOST, this.getActionType(), 0, 1)));
+        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(this.getActionType(), 0, 1)));
         Assertions.assertEquals(0, this.getHostUnit(game).getX());
         Assertions.assertEquals(1, this.getHostUnit(game).getY());
-        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(Player.HOST, this.getActionType(), 1, 1)));
+        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(this.getActionType(), 1, 1)));
         Assertions.assertEquals(1, this.getHostUnit(game).getX());
         Assertions.assertEquals(1, this.getHostUnit(game).getY());
-        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(Player.HOST, this.getActionType(), 1, 2)));
+        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(this.getActionType(), 1, 2)));
         Assertions.assertEquals(1, this.getHostUnit(game).getX());
         Assertions.assertEquals(2, this.getHostUnit(game).getY());
 
-        game.performAction(new Action(Player.OPPONENT, ActionType.END_TURN));
+        game.performAction(new Action(ActionType.END_TURN));
 
-        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(Player.HOST, this.getActionType(), 0, 2)));
+        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(this.getActionType(), 0, 2)));
         Assertions.assertEquals(0, this.getHostUnit(game).getX());
         Assertions.assertEquals(2, this.getHostUnit(game).getY());
-        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(Player.HOST, this.getActionType(), 0, 1)));
+        Assertions.assertDoesNotThrow(() -> game.performAction(new Action(this.getActionType(), 0, 1)));
         Assertions.assertEquals(0, this.getHostUnit(game).getX());
         Assertions.assertEquals(1, this.getHostUnit(game).getY());
     }
@@ -146,9 +145,9 @@ abstract class MoveTest {
     @MethodSource("offMapCoordinatesProvider")
     void testUnitCanNotMoveOffMap(final int firstX, final int secondX) throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, this.getActionType(), firstX, 1));
+        game.performAction(new Action(this.getActionType(), firstX, 1));
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), secondX, 1));
+            game.performAction(new Action(this.getActionType(), secondX, 1));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NO_SUCH_POSITION, e.getReason());
@@ -160,7 +159,7 @@ abstract class MoveTest {
         final Game game = new Game();
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), 0, 2));
+            game.performAction(new Action(this.getActionType(), 0, 2));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_WITHIN_REACH, e.getReason());
@@ -171,10 +170,10 @@ abstract class MoveTest {
     @MethodSource("tooFarHorizontalMovesProvider")
     void testUnitCanNotMoveMoreThanOneSpaceHorizontally(final int firstX, final int secondX) throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, this.getActionType(), firstX, 1));
+        game.performAction(new Action(this.getActionType(), firstX, 1));
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), secondX, 1));
+            game.performAction(new Action(this.getActionType(), secondX, 1));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_WITHIN_REACH, e.getReason());
@@ -185,13 +184,13 @@ abstract class MoveTest {
     @ValueSource(ints = {1, 5})
     void testUnitCanNotMoveMoreThanOneSpaceVertically(final int destinationY) throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 1));
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 2));
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 3));
-        game.performAction(new Action(Player.OPPONENT, ActionType.END_TURN));
+        game.performAction(new Action(this.getActionType(), 2, 1));
+        game.performAction(new Action(this.getActionType(), 2, 2));
+        game.performAction(new Action(this.getActionType(), 2, 3));
+        game.performAction(new Action(ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), 2, destinationY));
+            game.performAction(new Action(this.getActionType(), 2, destinationY));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_WITHIN_REACH, e.getReason());
@@ -202,13 +201,13 @@ abstract class MoveTest {
     @MethodSource("diagonalMoves")
     void testUnitCanNotMoveDiagonally(final int destinationX, final int destinationY) throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 1));
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 2));
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 3));
-        game.performAction(new Action(Player.OPPONENT, ActionType.END_TURN));
+        game.performAction(new Action(this.getActionType(), 2, 1));
+        game.performAction(new Action(this.getActionType(), 2, 2));
+        game.performAction(new Action(this.getActionType(), 2, 3));
+        game.performAction(new Action(ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), destinationX, destinationY));
+            game.performAction(new Action(this.getActionType(), destinationX, destinationY));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.NOT_WITHIN_REACH, e.getReason());
@@ -218,10 +217,10 @@ abstract class MoveTest {
     @Test
     void testHostUnitCanNotZeroMove() throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, this.getActionType(), 2, 1));
+        game.performAction(new Action(this.getActionType(), 2, 1));
 
         try {
-            game.performAction(new Action(Player.HOST, this.getActionType(), 2, 1));
+            game.performAction(new Action(this.getActionType(), 2, 1));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.ILLEGAL_MOVE, e.getReason());
@@ -231,10 +230,10 @@ abstract class MoveTest {
     @Test
     void testOpponentUnitCanNotZeroMove() throws IllegalActionException {
         final Game game = new Game();
-        game.performAction(new Action(Player.HOST, ActionType.END_TURN));
+        game.performAction(new Action(ActionType.END_TURN));
 
         try {
-            game.performAction(new Action(Player.OPPONENT, this.getActionType(), 0, 6));
+            game.performAction(new Action(this.getActionType(), 0, 6));
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.ILLEGAL_MOVE, e.getReason());

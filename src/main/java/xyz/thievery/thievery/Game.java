@@ -1,7 +1,6 @@
 package xyz.thievery.thievery;
 
 import xyz.thievery.thievery.exceptions.IllegalActionException;
-import xyz.thievery.thievery.exceptions.IllegalActionReason;
 import xyz.thievery.thievery.units.Guard;
 import xyz.thievery.thievery.units.Thief;
 
@@ -81,8 +80,42 @@ public class Game {
     }
 
     public void performAction(final Action action) throws IllegalActionException {
-        // This is general validation, regardless of the specifics of Action
-        this.generalValidation(action);
+//        if (Status.END == this.status) {
+//            throw new IllegalActionException("An action cannot be performmed on an ended game.");
+//        }
+
+        final Guard myGuard;
+        final Thief myThief;
+        final Guard theirGuard;
+        // Are we ever concerned with their thief?
+        // final Thief theirThief;
+
+        switch (this.status) {
+            case HOST_TURN: {
+                myGuard = this.hostGuard;
+                myThief = this.hostThief;
+                theirGuard = this.opponentGuard;
+                // theirThief = this.opponentThief;
+                break;
+            }
+            case OPPONENT_TURN: {
+                myGuard = this.opponentGuard;
+                myThief = this.opponentThief;
+                theirGuard = this.hostGuard;
+                // theirThief = this.hostThief;
+                break;
+            }
+//            case END: {
+//                throw new IllegalActionException(IllegalActionReason.GAME_ENDED,
+//                        "An action cannot be performed on an ended game.");
+//            }
+            default: {
+                // It should not be possible to reach this clause, but the uses of the final variables
+                // would not compile otherwise.
+                // TODO See if deferring this decision (switch) could save us having to include this clause.
+                throw new IllegalArgumentException("This game has null status! This should not be allowed.");
+            }
+        }
 
         // Per-action validation should occur here before making any changes
         switch (action.getActionType()) {
@@ -91,39 +124,11 @@ public class Game {
                 return;
             }
             case MOVE_GUARD: {
-                final Guard myGuard;
-                final Thief myThief;
-                final Guard theirGuard;
-
-                if (action.getPlayer() == Player.HOST) {
-                    myGuard = this.hostGuard;
-                    myThief = this.hostThief;
-                    theirGuard = this.opponentGuard;
-                } else {
-                    myGuard = this.opponentGuard;
-                    myThief = this.opponentThief;
-                    theirGuard = this.hostGuard;
-                }
-
                 myGuard.validateMove(action.getX(), action.getY(), myThief, theirGuard);
                 myGuard.executeMove(action.getX(), action.getY());
                 break;
             }
             case MOVE_THIEF: {
-                final Thief myThief;
-                final Guard myGuard;
-                final int homeRow;
-
-                if (action.getPlayer() == Player.HOST) {
-                    myThief = this.hostThief;
-                    myGuard = this.hostGuard;
-                    homeRow = HOST_HOME_ROW;
-                } else {
-                    myThief = this.opponentThief;
-                    myGuard = this.opponentGuard;
-                    homeRow = OPPONENT_HOME_ROW;
-                }
-
                 myThief.validateMove(action.getX(), action.getY(), myGuard);
                 myThief.executeMove(action.getX(), action.getY());
 
@@ -134,10 +139,6 @@ public class Game {
 //            case REVEAL:
 //                this.remainingActions--;
 //                break;
-
-//            default:
-//                throw new IllegalActionException(
-//                        IllegalActionReason.UNRECOGNISED_ACTION_TYPE, "Unrecognised action type.");
         }
 
 
@@ -160,19 +161,6 @@ public class Game {
             this.endTurn();
         }
 
-    }
-
-    private void generalValidation(final Action action) throws IllegalActionException {
-        //        if (Status.END == this.status) {
-//            throw new IllegalActionException("An action cannot be performmed on an ended game.");
-//        }
-
-        if (Status.HOST_TURN == this.status && Player.HOST != action.getPlayer()) {
-            throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the host's turn.");
-        }
-        if (Status.OPPONENT_TURN == this.status && Player.OPPONENT != action.getPlayer()) {
-            throw new IllegalActionException(IllegalActionReason.NOT_YOUR_TURN, "It is not the opponent's turn.");
-        }
     }
 
     private void endTurn() {

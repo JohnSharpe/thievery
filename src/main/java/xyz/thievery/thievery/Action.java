@@ -10,16 +10,12 @@ import xyz.thievery.thievery.exceptions.IllegalActionReason;
  */
 public class Action {
 
-    private final Player player;
     private final ActionType actionType;
 
     private final Integer x;
     private final Integer y;
 
-    public Action(final Player player, final ActionType actionType) throws IllegalActionException {
-        if (player == null) {
-            throw new IllegalActionException(IllegalActionReason.MALFORMED_ACTION, "An Action cannot exist without a player performing it.");
-        }
+    public Action(final ActionType actionType) throws IllegalActionException {
         if (actionType == null) {
             throw new IllegalActionException(IllegalActionReason.MALFORMED_ACTION, "An Action cannot exist without a type.");
         }
@@ -27,17 +23,13 @@ public class Action {
             throw new IllegalActionException(IllegalActionReason.MALFORMED_ACTION, "An action of type MOVE_GUARD or MOVE_THIEF needs destination coordinates.");
         }
 
-        this.player = player;
         this.actionType = actionType;
 
         this.x = null;
         this.y = null;
     }
 
-    public Action(final Player player, final ActionType actionType, final Integer x, final Integer y) throws IllegalActionException {
-        if (player == null) {
-            throw new IllegalActionException(IllegalActionReason.MALFORMED_ACTION, "An Action cannot exist without a player performing it.");
-        }
+    public Action(final ActionType actionType, final Integer x, final Integer y) throws IllegalActionException {
         if (actionType == null) {
             throw new IllegalActionException(IllegalActionReason.MALFORMED_ACTION, "An Action cannot exist without a type.");
         }
@@ -45,14 +37,9 @@ public class Action {
                 (x == null || y == null)) {
             throw new IllegalActionException(IllegalActionReason.MALFORMED_ACTION, "An action of type MOVE_GUARD or MOVE_THIEF needs destination coordinates.");
         }
-        this.player = player;
         this.actionType = actionType;
         this.x = x;
         this.y = y;
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public ActionType getActionType() {

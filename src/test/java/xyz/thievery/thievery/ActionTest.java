@@ -8,33 +8,16 @@ import xyz.thievery.thievery.exceptions.IllegalActionReason;
 class ActionTest {
 
     @Test
-    void testActionNeedsPlayer() {
-        try {
-            new Action(null, ActionType.END_TURN);
-            Assertions.fail();
-        } catch (IllegalActionException e) {
-            Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
-        }
-
-        try {
-            new Action(null, ActionType.END_TURN, 2, 1);
-            Assertions.fail();
-        } catch (IllegalActionException e) {
-            Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
-        }
-    }
-
-    @Test
     void testActionNeedsActionType() {
         try {
-            new Action(Player.HOST, null);
+            new Action(null);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, null, 2, 1);
+            new Action(null, 2, 1);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
@@ -44,28 +27,28 @@ class ActionTest {
     @Test
     void testMoveGuardNeedsDestinationCoordinates() {
         try {
-            new Action(Player.HOST, ActionType.MOVE_GUARD);
+            new Action(ActionType.MOVE_GUARD);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, ActionType.MOVE_GUARD, 1 ,null);
+            new Action(ActionType.MOVE_GUARD, 1 ,null);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, ActionType.MOVE_GUARD, null ,1);
+            new Action(ActionType.MOVE_GUARD, null ,1);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, ActionType.MOVE_GUARD, null ,null);
+            new Action(ActionType.MOVE_GUARD, null ,null);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
@@ -75,28 +58,28 @@ class ActionTest {
     @Test
     void testMoveThiefNeedsDestinationCoordinates() {
         try {
-            new Action(Player.HOST, ActionType.MOVE_THIEF);
+            new Action(ActionType.MOVE_THIEF);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, ActionType.MOVE_THIEF, 1 ,null);
+            new Action(ActionType.MOVE_THIEF, 1 ,null);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, ActionType.MOVE_THIEF, null ,1);
+            new Action(ActionType.MOVE_THIEF, null ,1);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
         }
 
         try {
-            new Action(Player.HOST, ActionType.MOVE_THIEF, null ,null);
+            new Action(ActionType.MOVE_THIEF, null ,null);
             Assertions.fail();
         } catch (IllegalActionException e) {
             Assertions.assertEquals(IllegalActionReason.MALFORMED_ACTION, e.getReason());
