@@ -18,7 +18,7 @@ class StealTest {
     }
 
     @Test
-    void testAHostThiefIsCarryingWhenHeEntersOpponentHome() throws IllegalActionException {
+    void testAHostThiefIsCarryingWhenEnteringOpponentHome() throws IllegalActionException {
         final Game game = new Game();
 
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
@@ -36,7 +36,7 @@ class StealTest {
     }
 
     @Test
-    void testAnOpponentThiefIsCarryingWhenHeLeavesHostHome() throws IllegalActionException {
+    void testAnOpponentThiefIsCarryingWhenEnteringHostHome() throws IllegalActionException {
         final Game game = new Game();
 
         game.performAction(new Action(ActionType.END_TURN));
@@ -53,7 +53,36 @@ class StealTest {
         Assertions.assertFalse(game.getOpponentThief().isCarrying());
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 0));
         Assertions.assertTrue(game.getOpponentThief().isCarrying());
+    }
 
+    @Test
+    void testACarryingHostThiefStealsWhenTheyGetHome() throws IllegalActionException {
+        final Game game = new Game();
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 3));
+
+        game.performAction(new Action(ActionType.END_TURN));
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 4));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 5));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 6));
+
+        game.performAction(new Action(ActionType.END_TURN));
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 5));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 4));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 3));
+
+        game.performAction(new Action(ActionType.END_TURN));
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 0));
+
+        Assertions.assertFalse(game.getHostThief().isCarrying());
+        // TODO What else does it mean to have stolen?
     }
 
 }

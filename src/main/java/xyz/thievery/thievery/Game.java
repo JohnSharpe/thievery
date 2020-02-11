@@ -143,7 +143,10 @@ public class Game {
                     myThief.setCarrying(true);
                 }
 
-                // TODO if (myThief.isCarrying() && myThief.getY() == myHome) {}
+                if (myThief.isCarrying() && myThief.getY() == myHome) {
+                    // TODO What else does a successful steal mean?
+                    myThief.setCarrying(false);
+                }
 
                 break;
             }
