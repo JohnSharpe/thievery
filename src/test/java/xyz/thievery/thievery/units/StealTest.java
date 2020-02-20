@@ -2,9 +2,7 @@ package xyz.thievery.thievery.units;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import xyz.thievery.thievery.Action;
-import xyz.thievery.thievery.ActionType;
-import xyz.thievery.thievery.Game;
+import xyz.thievery.thievery.*;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 
 class StealTest {
@@ -58,31 +56,43 @@ class StealTest {
     @Test
     void testACarryingHostThiefStealsWhenTheyGetHome() throws IllegalActionException {
         final Game game = new Game();
-
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 3));
-
-        game.performAction(new Action(ActionType.END_TURN));
-
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 4));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 5));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 6));
-
-        game.performAction(new Action(ActionType.END_TURN));
-
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 5));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 4));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 3));
-
-        game.performAction(new Action(ActionType.END_TURN));
-
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 0));
-
+        TestUtils.enactHostSteal(game);
         Assertions.assertFalse(game.getHostThief().isCarrying());
-        // TODO What else does it mean to have stolen?
+        Assertions.assertEquals(1, game.getHostSteals());
+    }
+
+    @Test
+    void testACarryingOpponentThiefStealsWhenTheyGetHome() throws IllegalActionException {
+        final Game game = new Game();
+        TestUtils.enactOpponentSteal(game);
+        Assertions.assertFalse(game.getOpponentThief().isCarrying());
+        Assertions.assertEquals(1, game.getOpponentSteals());
+    }
+
+    @Test
+    void testGameEndsAtThreeHostSteals() throws IllegalActionException {
+        final Game game = new Game();
+        TestUtils.enactHostSteal(game);
+        Assertions.assertEquals(1, game.getHostSteals());
+        game.performAction(new Action(ActionType.END_TURN));
+        TestUtils.enactHostSteal(game);
+        Assertions.assertEquals(2, game.getHostSteals());
+        game.performAction(new Action(ActionType.END_TURN));
+        TestUtils.enactHostSteal(game);
+        Assertions.assertEquals(3, game.getHostSteals());
+        Assertions.assertEquals(Status.END, game.getStatus());
+    }
+
+    @Test
+    void testGameEndsAtThreeOpponentSteals() throws IllegalActionException {
+        final Game game = new Game();
+        TestUtils.enactOpponentSteal(game);
+        Assertions.assertEquals(1, game.getOpponentSteals());
+        TestUtils.enactOpponentSteal(game);
+        Assertions.assertEquals(2, game.getOpponentSteals());
+        TestUtils.enactOpponentSteal(game);
+        Assertions.assertEquals(3, game.getOpponentSteals());
+        Assertions.assertEquals(Status.END, game.getStatus());
     }
 
 }

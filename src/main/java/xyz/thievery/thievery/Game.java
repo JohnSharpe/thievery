@@ -1,6 +1,7 @@
 package xyz.thievery.thievery;
 
 import xyz.thievery.thievery.exceptions.IllegalActionException;
+import xyz.thievery.thievery.exceptions.IllegalActionReason;
 import xyz.thievery.thievery.units.Guard;
 import xyz.thievery.thievery.units.Thief;
 
@@ -36,11 +37,16 @@ public class Game {
 
     private static final int ACTIONS_PER_TURN = 3;
 
+    // TODO Eventually this will be unnecessary
+    private static final int STEALS_TO_WIN = 3;
+
     private final Guard hostGuard;
     private final Thief hostThief;
+    private int hostSteals;
 
     private final Guard opponentGuard;
     private final Thief opponentThief;
+    private int opponentSteals;
 
     private Status status;
     private int remainingActions;
@@ -48,8 +54,11 @@ public class Game {
     public Game() {
         this.hostGuard = new Guard(Player.HOST);
         this.hostThief = new Thief(Player.HOST);
+        this.hostSteals = 0;
+
         this.opponentGuard = new Guard(Player.OPPONENT);
         this.opponentThief = new Thief(Player.OPPONENT);
+        this.opponentSteals = 0;
 
         this.status = Status.HOST_TURN;
         this.remainingActions = ACTIONS_PER_TURN;
@@ -71,6 +80,10 @@ public class Game {
         return hostThief;
     }
 
+    public int getHostSteals() {
+        return hostSteals;
+    }
+
     public Guard getOpponentGuard() {
         return opponentGuard;
     }
@@ -79,10 +92,14 @@ public class Game {
         return opponentThief;
     }
 
+    public int getOpponentSteals() {
+        return opponentSteals;
+    }
+
     public void performAction(final Action action) throws IllegalActionException {
-//        if (Status.END == this.status) {
-//            throw new IllegalActionException("An action cannot be performmed on an ended game.");
-//        }
+        if (Status.END == this.status) {
+            throw new IllegalActionException(IllegalActionReason.GAME_ENDED, "An action cannot be performmed on an ended game.");
+        }
 
         final Guard myGuard;
         final Thief myThief;
@@ -146,6 +163,22 @@ public class Game {
                 if (myThief.isCarrying() && myThief.getY() == myHome) {
                     // TODO What else does a successful steal mean?
                     myThief.setCarrying(false);
+                    // TODO Lives are not intended to work this way so it is likely this inefficiency
+                    // TODO will go away once more behaviour is implemented.
+                    if (this.status == Status.HOST_TURN) {
+                        this.hostSteals++;
+
+                        if (this.hostSteals == STEALS_TO_WIN) {
+                            this.status = Status.END;
+                        }
+
+                    } else {
+                        this.opponentSteals++;
+
+                        if (this.opponentSteals == STEALS_TO_WIN) {
+                            this.status = Status.END;
+                        }
+                    }
                 }
 
                 break;
