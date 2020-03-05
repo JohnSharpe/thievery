@@ -9,6 +9,5 @@ Use Maven to build/test this project.
 To get started you need a `Game`. More details to come.
 
 ## To Do
-- Carrying and stealing
 - Guard scopes (horizontal, vertical, reveal)
 - 3rd move guards only
