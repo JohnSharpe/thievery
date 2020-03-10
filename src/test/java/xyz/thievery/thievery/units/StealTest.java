@@ -9,7 +9,7 @@ class StealTest {
 
     @Test
     void testThievesDoNotStartCarrying() {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         Assertions.assertFalse(game.getHostThief().isCarrying());
         Assertions.assertFalse(game.getOpponentThief().isCarrying());
@@ -17,7 +17,7 @@ class StealTest {
 
     @Test
     void testAHostThiefIsCarryingWhenEnteringOpponentHome() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
@@ -35,7 +35,7 @@ class StealTest {
 
     @Test
     void testAnOpponentThiefIsCarryingWhenEnteringHostHome() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.END_TURN));
 
@@ -55,7 +55,7 @@ class StealTest {
 
     @Test
     void testACarryingHostThiefStealsWhenTheyGetHome() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         TestUtils.enactHostSteal(game);
         Assertions.assertFalse(game.getHostThief().isCarrying());
         Assertions.assertEquals(1, game.getHostSteals());
@@ -63,7 +63,7 @@ class StealTest {
 
     @Test
     void testACarryingOpponentThiefStealsWhenTheyGetHome() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         TestUtils.enactOpponentSteal(game);
         Assertions.assertFalse(game.getOpponentThief().isCarrying());
         Assertions.assertEquals(1, game.getOpponentSteals());
@@ -71,7 +71,7 @@ class StealTest {
 
     @Test
     void testGameEndsAtThreeHostSteals() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         TestUtils.enactHostSteal(game);
         Assertions.assertEquals(1, game.getHostSteals());
         game.performAction(new Action(ActionType.END_TURN));
@@ -85,7 +85,7 @@ class StealTest {
 
     @Test
     void testGameEndsAtThreeOpponentSteals() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         TestUtils.enactOpponentSteal(game);
         Assertions.assertEquals(1, game.getOpponentSteals());
         TestUtils.enactOpponentSteal(game);

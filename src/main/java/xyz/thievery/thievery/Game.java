@@ -2,8 +2,13 @@ package xyz.thievery.thievery;
 
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
+import xyz.thievery.thievery.exceptions.RangeNotAvailableException;
 import xyz.thievery.thievery.units.Guard;
 import xyz.thievery.thievery.units.Thief;
+import xyz.thievery.thievery.units.ranges.RangeSupplier;
+import xyz.thievery.thievery.units.ranges.RangeType;
+
+import java.util.Set;
 
 /**
  * A single game of Thievery.
@@ -40,24 +45,32 @@ public class Game {
     // TODO Eventually this will be unnecessary
     private static final int STEALS_TO_WIN = 3;
 
+    private final Set<RangeType> hostAvailableRanges;
     private final Guard hostGuard;
     private final Thief hostThief;
+    // TODO Will be unnecessary
     private int hostSteals;
 
+    private final Set<RangeType> opponentAvailableRanges;
     private final Guard opponentGuard;
     private final Thief opponentThief;
+    // TODO Will be unnecessary
     private int opponentSteals;
 
     private Status status;
     private int remainingActions;
 
-    public Game() {
-        this.hostGuard = new Guard(Player.HOST);
+    public Game(final RangeType hostRangeType, final RangeType opponentRangeType) throws RangeNotAvailableException {
+        this.hostAvailableRanges = RangeSupplier.createStartingRanges();
+        this.hostGuard = new Guard(Player.HOST, RangeSupplier.getRangeFromAvailable(hostRangeType, this.hostAvailableRanges));
         this.hostThief = new Thief(Player.HOST);
+        // TODO Will be unnecessary
         this.hostSteals = 0;
 
-        this.opponentGuard = new Guard(Player.OPPONENT);
+        this.opponentAvailableRanges = RangeSupplier.createStartingRanges();
+        this.opponentGuard = new Guard(Player.OPPONENT, RangeSupplier.getRangeFromAvailable(opponentRangeType, this.opponentAvailableRanges));
         this.opponentThief = new Thief(Player.OPPONENT);
+        // TODO Will be unnecessary
         this.opponentSteals = 0;
 
         this.status = Status.HOST_TURN;

@@ -1,17 +1,18 @@
-package xyz.thievery.thievery.units.catches;
+package xyz.thievery.thievery.units;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import xyz.thievery.thievery.Action;
 import xyz.thievery.thievery.ActionType;
 import xyz.thievery.thievery.Game;
+import xyz.thievery.thievery.TestUtils;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 
 class CatchTest {
 
     @Test
     void testHostGuardCanNotCatchFromHomeRow() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.END_TURN));
 
@@ -30,7 +31,7 @@ class CatchTest {
 
     @Test
     void testOpponentGuardCanNotCatchFromHomeRow() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
@@ -47,7 +48,7 @@ class CatchTest {
 
     @Test
     void testHostThiefIsCaughtWhenMovingOntoOpponentGuard() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 1));
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 2));
@@ -65,7 +66,7 @@ class CatchTest {
 
     @Test
     void testOpponentThiefIsCaughtWhenMovingOntoHostGuard() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 1));
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 2));
@@ -81,7 +82,7 @@ class CatchTest {
 
     @Test
     void testHostThiefIsCaughtWhenMovedOntoByOpponentGuard() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 1));
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 2));
@@ -97,7 +98,7 @@ class CatchTest {
 
     @Test
     void testOpponentThiefIsCaughtWhenMovedOntoByHostGuard() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 1));
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 2));
@@ -115,7 +116,7 @@ class CatchTest {
 
     @Test
     void testCatchingRemovesCarryingStatusOnHost() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
         game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
@@ -140,7 +141,7 @@ class CatchTest {
 
     @Test
     void testCatchingRemovesCarryingStatusOnOpponent() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         game.performAction(new Action(ActionType.END_TURN));
 

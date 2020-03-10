@@ -9,13 +9,13 @@ class GameTest {
 
     @Test
     void testHostGoesFirstInNewGame() {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         Assertions.assertEquals(Status.HOST_TURN, game.getStatus());
     }
 
     @Test
     void testUnitCreation() {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         Assertions.assertNotNull(game.getHostGuard());
         Assertions.assertNotNull(game.getHostThief());
         Assertions.assertNotNull(game.getOpponentGuard());
@@ -24,14 +24,14 @@ class GameTest {
 
     @Test
     void testStartingSteals() {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
         Assertions.assertEquals(0, game.getHostSteals());
         Assertions.assertEquals(0, game.getOpponentSteals());
     }
 
     @Test
     void testActionCanNotBePerformedOnEndedGame() throws IllegalActionException {
-        final Game game = new Game();
+        final Game game = TestUtils.createNoNonsenseGame();
 
         TestUtils.enactHostSteal(game);
         game.performAction(new Action(ActionType.END_TURN));
