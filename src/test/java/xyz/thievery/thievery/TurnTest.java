@@ -3,12 +3,13 @@ package xyz.thievery.thievery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
+import xyz.thievery.thievery.units.ranges.RangeType;
 
 class TurnTest {
 
     @Test
     void testATurnIsAutomaticallyEndedAfterThreeValidActions() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         Assertions.assertEquals(Status.HOST_TURN, game.getStatus());
         Assertions.assertEquals(3, game.getRemainingActions());

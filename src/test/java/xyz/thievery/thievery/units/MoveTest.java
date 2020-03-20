@@ -9,9 +9,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import xyz.thievery.thievery.Action;
 import xyz.thievery.thievery.ActionType;
 import xyz.thievery.thievery.Game;
-import xyz.thievery.thievery.TestUtils;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
+import xyz.thievery.thievery.units.ranges.RangeType;
 
 import java.util.stream.Stream;
 
@@ -20,7 +20,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4})
     void testHostUnitCanMoveOutOfHome(final int destinationX) {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         Assertions.assertDoesNotThrow(() -> game.performAction(
                 new Action(this.getActionType(), destinationX, 1)
@@ -33,7 +33,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4})
     void testOpponentUnitCanMoveOutOfHome(final int destinationX) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.END_TURN));
 
         Assertions.assertDoesNotThrow(() -> game.performAction(
@@ -47,7 +47,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4})
     void testHostUnitCanMoveFromHomeToAnyColumn(final int destinationX) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         game.performAction(new Action(this.getActionType(), destinationX, 1));
 
@@ -58,7 +58,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4})
     void testOpponentUnitCanMoveFromHomeToAnyColumn(final int destinationX) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         game.performAction(new Action(ActionType.END_TURN));
         game.performAction(new Action(this.getActionType(), destinationX, 5));
@@ -70,7 +70,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, 5})
     void testHostUnitCanNotMoveHorizontallyOffMapFromHome(final int destinationX) {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         try {
             game.performAction(new Action(this.getActionType(), destinationX, 0));
@@ -82,7 +82,7 @@ abstract class MoveTest {
 
     @Test
     void testHostUnitCanNotMoveVerticallyOffMapFromHome() {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         try {
             game.performAction(new Action(this.getActionType(), 0, -1));
@@ -95,7 +95,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, 5})
     void testOpponentUnitCanNotMoveHorizontallyOffMapFromHome(final int destinationX) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.END_TURN));
 
         try {
@@ -108,7 +108,7 @@ abstract class MoveTest {
 
     @Test
     void testOpponentUnitCanNotMoveVerticallyOffMapFromHome() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.END_TURN));
 
         try {
@@ -121,7 +121,7 @@ abstract class MoveTest {
 
     @Test
     void testUnitCanMoveToAdjacentPoint() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         Assertions.assertDoesNotThrow(() -> game.performAction(new Action(this.getActionType(), 0, 1)));
         Assertions.assertEquals(0, this.getHostUnit(game).getX());
         Assertions.assertEquals(1, this.getHostUnit(game).getY());
@@ -145,7 +145,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @MethodSource("offMapCoordinatesProvider")
     void testUnitCanNotMoveOffMap(final int firstX, final int secondX) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(this.getActionType(), firstX, 1));
         try {
             game.performAction(new Action(this.getActionType(), secondX, 1));
@@ -157,7 +157,7 @@ abstract class MoveTest {
 
     @Test
     void testUnitCanNotMoveMoreThanOneSpaceFromHome() {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
 
         try {
             game.performAction(new Action(this.getActionType(), 0, 2));
@@ -170,7 +170,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @MethodSource("tooFarHorizontalMovesProvider")
     void testUnitCanNotMoveMoreThanOneSpaceHorizontally(final int firstX, final int secondX) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(this.getActionType(), firstX, 1));
 
         try {
@@ -184,7 +184,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 5})
     void testUnitCanNotMoveMoreThanOneSpaceVertically(final int destinationY) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(this.getActionType(), 2, 1));
         game.performAction(new Action(this.getActionType(), 2, 2));
         game.performAction(new Action(this.getActionType(), 2, 3));
@@ -201,7 +201,7 @@ abstract class MoveTest {
     @ParameterizedTest
     @MethodSource("diagonalMoves")
     void testUnitCanNotMoveDiagonally(final int destinationX, final int destinationY) throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(this.getActionType(), 2, 1));
         game.performAction(new Action(this.getActionType(), 2, 2));
         game.performAction(new Action(this.getActionType(), 2, 3));
@@ -217,7 +217,7 @@ abstract class MoveTest {
 
     @Test
     void testHostUnitCanNotZeroMove() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(this.getActionType(), 2, 1));
 
         try {
@@ -230,7 +230,7 @@ abstract class MoveTest {
 
     @Test
     void testOpponentUnitCanNotZeroMove() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.END_TURN));
 
         try {

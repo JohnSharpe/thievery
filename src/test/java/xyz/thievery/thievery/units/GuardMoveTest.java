@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import xyz.thievery.thievery.Action;
 import xyz.thievery.thievery.ActionType;
 import xyz.thievery.thievery.Game;
-import xyz.thievery.thievery.TestUtils;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 import xyz.thievery.thievery.exceptions.IllegalActionReason;
+import xyz.thievery.thievery.units.ranges.RangeType;
 
 class GuardMoveTest extends MoveTest {
 
@@ -28,7 +28,7 @@ class GuardMoveTest extends MoveTest {
 
     @Test
     void testGuardCanNotMoveOntoOtherGuard() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 1));
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 2));
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 3));
@@ -46,7 +46,7 @@ class GuardMoveTest extends MoveTest {
 
     @Test
     void testGuardCanNotMoveOntoYourThief() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 1));
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 2));
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 1));
@@ -63,7 +63,7 @@ class GuardMoveTest extends MoveTest {
 
     @Test
     void testGuardCanNotEnterHome() throws IllegalActionException {
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         game.performAction(new Action(ActionType.MOVE_GUARD, 0, 1));
 
         try {

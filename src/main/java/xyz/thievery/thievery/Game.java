@@ -60,21 +60,26 @@ public class Game {
     private Status status;
     private int remainingActions;
 
-    public Game(final RangeType hostRangeType, final RangeType opponentRangeType) throws RangeNotAvailableException {
-        this.hostAvailableRanges = RangeSupplier.createStartingRanges();
-        this.hostGuard = new Guard(Player.HOST, RangeSupplier.getRangeFromAvailable(hostRangeType, this.hostAvailableRanges));
-        this.hostThief = new Thief(Player.HOST);
-        // TODO Will be unnecessary
-        this.hostSteals = 0;
+    public Game(final RangeType hostRangeType, final RangeType opponentRangeType) {
+        try {
+            this.hostAvailableRanges = RangeSupplier.createStartingRanges();
+            this.hostGuard = new Guard(Player.HOST, RangeSupplier.getRangeFromAvailable(hostRangeType, this.hostAvailableRanges));
+            this.hostThief = new Thief(Player.HOST);
+            // TODO Will be unnecessary
+            this.hostSteals = 0;
 
-        this.opponentAvailableRanges = RangeSupplier.createStartingRanges();
-        this.opponentGuard = new Guard(Player.OPPONENT, RangeSupplier.getRangeFromAvailable(opponentRangeType, this.opponentAvailableRanges));
-        this.opponentThief = new Thief(Player.OPPONENT);
-        // TODO Will be unnecessary
-        this.opponentSteals = 0;
+            this.opponentAvailableRanges = RangeSupplier.createStartingRanges();
+            this.opponentGuard = new Guard(Player.OPPONENT, RangeSupplier.getRangeFromAvailable(opponentRangeType, this.opponentAvailableRanges));
+            this.opponentThief = new Thief(Player.OPPONENT);
+            // TODO Will be unnecessary
+            this.opponentSteals = 0;
 
-        this.status = Status.HOST_TURN;
-        this.remainingActions = ACTIONS_PER_TURN;
+            this.status = Status.HOST_TURN;
+            this.remainingActions = ACTIONS_PER_TURN;
+        } catch (RangeNotAvailableException e) {
+            // If this happens, we should just get out of here.
+            throw new RuntimeException(e);
+        }
     }
 
     public Status getStatus() {

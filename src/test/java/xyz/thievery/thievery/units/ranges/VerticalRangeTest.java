@@ -1,14 +1,12 @@
 package xyz.thievery.thievery.units.ranges;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import xyz.thievery.thievery.Action;
 import xyz.thievery.thievery.ActionType;
 import xyz.thievery.thievery.Game;
-import xyz.thievery.thievery.TestUtils;
 import xyz.thievery.thievery.exceptions.IllegalActionException;
 
 import java.util.Arrays;
@@ -21,7 +19,7 @@ class VerticalRangeTest {
     @MethodSource("hostVerticalCatchesProvider")
     void TestHostVerticalCatches(final List<Action> preparatoryActions, final Action catchAction) throws IllegalActionException {
         // Given
-        final Game game = TestUtils.createNoNonsenseGame();
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
         for (final Action action : preparatoryActions) {
             game.performAction(action);
         }
