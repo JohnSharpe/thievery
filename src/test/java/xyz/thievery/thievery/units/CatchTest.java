@@ -54,11 +54,12 @@ class CatchTest {
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 2));
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 3));
 
-        game.performAction(new Action(ActionType.MOVE_GUARD, 2, 5));
-        game.performAction(new Action(ActionType.MOVE_GUARD, 2, 4));
-        game.performAction(new Action(ActionType.END_TURN));
+        // Walk along different columns so the vertical range doesn't catch early
+        game.performAction(new Action(ActionType.MOVE_GUARD, 3, 5));
+        game.performAction(new Action(ActionType.MOVE_GUARD, 3, 4));
+        game.performAction(new Action(ActionType.MOVE_GUARD, 3, 3));
 
-        game.performAction(new Action(ActionType.MOVE_THIEF, 2, 4));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 3, 3));
 
         Assertions.assertEquals(Game.HOST_HOME_ROW, game.getHostThief().getY());
         Assertions.assertFalse(game.getHostThief().isCarrying());
@@ -72,8 +73,13 @@ class CatchTest {
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 2));
         game.performAction(new Action(ActionType.MOVE_GUARD, 2, 3));
 
-        game.performAction(new Action(ActionType.MOVE_THIEF, 2, 5));
-        game.performAction(new Action(ActionType.MOVE_THIEF, 2, 4));
+        // Walk along different columns so the vertical range doesn't catch early
+        game.performAction(new Action(ActionType.MOVE_THIEF, 1, 5));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 1, 4));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 1, 3));
+
+        game.performAction(new Action(ActionType.END_TURN));
+
         game.performAction(new Action(ActionType.MOVE_THIEF, 2, 3));
 
         Assertions.assertEquals(Game.OPPONENT_HOME_ROW, game.getOpponentThief().getY());

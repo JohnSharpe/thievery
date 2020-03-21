@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 class VerticalRangeTest {
 
+    // Where the Host Guard catches the Opponent thief
     @ParameterizedTest
     @MethodSource("hostVerticalCatchesProvider")
     void TestHostVerticalCatches(final List<Action> preparatoryActions, final Action catchAction) throws IllegalActionException {
@@ -25,23 +26,40 @@ class VerticalRangeTest {
         }
 
         // Host Thief should NOT be at home at this point
-        Assertions.assertNotEquals(Game.HOST_HOME_ROW, game.getHostThief().getY());
+        Assertions.assertNotEquals(Game.OPPONENT_HOME_ROW, game.getOpponentThief().getY());
+        Assertions.assertNotEquals(Game.HOST_HOME_ROW, game.getOpponentThief().getY());
 
         // When
         game.performAction(catchAction);
 
         // Then
-        Assertions.assertEquals(Game.HOST_HOME_ROW, game.getHostThief().getY());
-        Assertions.assertFalse(game.getHostThief().isCarrying());
+        Assertions.assertEquals(Game.OPPONENT_HOME_ROW, game.getOpponentThief().getY());
+        Assertions.assertFalse(game.getOpponentThief().isCarrying());
     }
 
     private static Stream<Arguments> hostVerticalCatchesProvider() throws IllegalActionException {
         return Stream.of(
                 Arguments.of(
                         Arrays.asList(
-                               // TODO Preparatory actions
+                               new Action(ActionType.MOVE_GUARD, 2, 1),
+                                new Action(ActionType.MOVE_GUARD, 2, 2),
+                                new Action(ActionType.MOVE_GUARD, 2, 3),
+                                new Action(ActionType.MOVE_THIEF, 3, 5),
+                                new Action(ActionType.MOVE_THIEF, 3, 4)
                         ),
-                        // TODO Catching action
+                        new Action(ActionType.MOVE_THIEF, 2, 4)
+                ),
+                Arguments.of(
+                        Arrays.asList(
+                                new Action(ActionType.MOVE_GUARD, 2, 1),
+                                new Action(ActionType.MOVE_GUARD, 2, 2),
+                                new Action(ActionType.MOVE_GUARD, 2, 3),
+                                new Action(ActionType.MOVE_THIEF, 1, 5),
+                                new Action(ActionType.MOVE_THIEF, 1, 4),
+                                new Action(ActionType.MOVE_THIEF, 1, 3),
+                                new Action(ActionType.END_TURN),
+                                new Action(ActionType.MOVE_THIEF, 1, 2)
+                        ),
                         new Action(ActionType.MOVE_THIEF, 2, 2)
                 )
         );

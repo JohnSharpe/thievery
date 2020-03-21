@@ -31,9 +31,7 @@ public class Guard extends Unit {
         }
     }
 
-    public boolean hasCaught(final Thief thief) {
-
-        boolean hasCaught = false;
+    public boolean hasCaught(final Thief thief, final boolean reveal) {
 
         // Guards are powerless in their home row.
         if (Game.HOST_HOME_ROW == this.getY() || Game.OPPONENT_HOME_ROW == this.getY()) {
@@ -42,12 +40,15 @@ public class Guard extends Unit {
 
         // Guards always catch if they're right on
         if (this.getX() == thief.getX() && this.getY() == thief.getY()) {
-            hasCaught = true;
+            return true;
         }
 
-        // TODO Add the range
+        // Does the guard's range allow a catch?
+        if (this.range.hasCaught(this.getX(), this.getY(), thief.getX(), thief.getY(), reveal)) {
+            return true;
+        }
 
-        return hasCaught;
+        return false;
     }
 
     public Range getRange() {

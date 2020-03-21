@@ -26,6 +26,7 @@ public abstract class RangeSupplier {
                 case REVEAL:
                     return new RevealRange();
                 default:
+                    // Not sure how to test this impossible case.
                     throw new IllegalArgumentException();
             }
         } else {

@@ -12,25 +12,25 @@ import java.util.Set;
 
 /**
  * A single game of Thievery.
- *
+ * <p>
  * The map looks like this
- *                ________________________
+ * ________________________
  * 6 (Opp Home)  |                        |
- *               |________________________|
+ * |________________________|
  * 5             |    |    |    |    |    |
- *               |____|____|____|____|____|
+ * |____|____|____|____|____|
  * 4             |    |    |    |    |    |
- *               |____|____|____|____|____|
+ * |____|____|____|____|____|
  * 3             |    |    |    |    |    |
- *               |____|____|____|____|____|
+ * |____|____|____|____|____|
  * 2             |    |    |    |    |    |
- *               |____|____|____|____|____|
+ * |____|____|____|____|____|
  * 1             |    |    |    |    |    |
- *               | ___|____|____|____|____|
+ * | ___|____|____|____|____|
  * 0 (Host Home) |                        |
- *               |________________________|
- *
- *                 0    1    2    3    4
+ * |________________________|
+ * <p>
+ * 0    1    2    3    4
  */
 public class Game {
 
@@ -159,6 +159,8 @@ public class Game {
             }
         }
 
+        boolean reveal = false;
+
         // Per-action validation should occur here before making any changes
         switch (action.getActionType()) {
             case END_TURN: {
@@ -203,19 +205,26 @@ public class Game {
             }
 //            case REVEAL:
 //                this.remainingActions--;
+            // reveal = true;
 //                break;
         }
 
 
         // Check for catches
         //// Host guard catches Opponent thief
-        if (this.hostGuard.hasCaught(this.opponentThief)) {
+        ////// Thieves are invincible in home rows
+        if (this.opponentThief.getY() != HOST_HOME_ROW &&
+                this.opponentThief.getY() != OPPONENT_HOME_ROW &&
+                this.hostGuard.hasCaught(this.opponentThief, reveal)) {
             this.opponentThief.setCarrying(false);
             this.opponentThief.executeMove(0, OPPONENT_HOME_ROW);
         }
 
         //// Opponent guard catches Host thief
-        if (this.opponentGuard.hasCaught(this.hostThief)) {
+        ////// Thieves are invincible in home rows
+        if (this.hostThief.getY() != HOST_HOME_ROW &&
+                this.hostThief.getY() != OPPONENT_HOME_ROW &&
+                this.opponentGuard.hasCaught(this.hostThief, reveal)) {
             this.hostThief.setCarrying(false);
             this.hostThief.executeMove(0, HOST_HOME_ROW);
         }
