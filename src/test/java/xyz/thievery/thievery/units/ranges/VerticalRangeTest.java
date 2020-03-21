@@ -15,6 +15,14 @@ import java.util.stream.Stream;
 
 class VerticalRangeTest {
 
+    // TODO Consider just testing the VerticalRange type!
+//    @ParameterizedTest
+//    @MethodSource("")
+//    void testVerticalRange() {
+//        final VerticalRange verticalRange = new VerticalRange();
+//        verticalRange.
+//    }
+
     // Where the Host Guard catches the Opponent thief
     @ParameterizedTest
     @MethodSource("hostVerticalCatchesProvider")
