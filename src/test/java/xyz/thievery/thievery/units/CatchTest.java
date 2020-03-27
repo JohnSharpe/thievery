@@ -172,4 +172,48 @@ class CatchTest {
         Assertions.assertFalse(game.getOpponentThief().isCarrying());
     }
 
+    @Test
+    void testHostThiefCannotBeCaughtInOpponentHome() throws IllegalActionException {
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 3));
+
+        game.performAction(new Action(ActionType.MOVE_GUARD, 1, 5));
+        game.performAction(new Action(ActionType.END_TURN));
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 4));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 5));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 6));
+
+        game.performAction(new Action(ActionType.MOVE_GUARD, 0, 5));
+
+        Assertions.assertTrue(game.getHostThief().isCarrying());
+        Assertions.assertEquals(Game.OPPONENT_HOME_ROW, game.getHostThief().getY());
+    }
+
+    @Test
+    void testOpponentThiefCannotBeCaughtInHostHome() throws IllegalActionException {
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
+
+        game.performAction(new Action(ActionType.MOVE_GUARD, 1, 1));
+        game.performAction(new Action(ActionType.END_TURN));
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 5));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 4));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 3));
+
+        game.performAction(new Action(ActionType.END_TURN));
+
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 2));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 1));
+        game.performAction(new Action(ActionType.MOVE_THIEF, 0, 0));
+
+        game.performAction(new Action(ActionType.MOVE_GUARD, 0, 1));
+
+        Assertions.assertTrue(game.getOpponentThief().isCarrying());
+        Assertions.assertEquals(Game.HOST_HOME_ROW, game.getOpponentThief().getY());
+    }
+
 }

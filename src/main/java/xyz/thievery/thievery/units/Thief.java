@@ -22,6 +22,12 @@ public class Thief extends Unit {
             throw new IllegalActionException(IllegalActionReason.BLOCKED, "A thief can not land on his own guard.");
         }
 
+        // TODO Consider moving this into the supertype
+        if ((this.getY() == Game.HOST_HOME_ROW || this.getY() == Game.OPPONENT_HOME_ROW) &&
+                (destinationY == Game.HOST_HOME_ROW || destinationY == Game.OPPONENT_HOME_ROW)) {
+            throw new IllegalActionException(IllegalActionReason.ILLEGAL_MOVE, "A thief cannot (and does not need to) move laterally while in a home.");
+        }
+
     }
 
     public boolean isCarrying() {

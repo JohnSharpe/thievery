@@ -43,4 +43,30 @@ class ThiefMoveTest extends MoveTest {
         }
     }
 
+    @Test
+    void testLateralMovementIsNotAllowedInHostHome() {
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
+
+        try {
+            game.performAction(new Action(ActionType.MOVE_THIEF, 1, 0));
+            Assertions.fail();
+        } catch (final IllegalActionException e) {
+            Assertions.assertEquals(IllegalActionReason.ILLEGAL_MOVE, e.getReason());
+        }
+    }
+
+    @Test
+    void testLateralMovementIsNotAllowedInOpponentHome() throws IllegalActionException {
+        final Game game = new Game(RangeType.VERTICAL, RangeType.VERTICAL);
+
+        game.performAction(new Action(ActionType.END_TURN));
+
+        try {
+            game.performAction(new Action(ActionType.MOVE_THIEF, 1, 6));
+            Assertions.fail();
+        } catch (final IllegalActionException e) {
+            Assertions.assertEquals(IllegalActionReason.ILLEGAL_MOVE, e.getReason());
+        }
+    }
+
 }
